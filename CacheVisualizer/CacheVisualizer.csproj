@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>CacheVisualizer</RootNamespace>
+    <StartupObject>CacheVisualizer.Tests.CacheSimulatorTest</StartupObject>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Scripts\Core\*.cs" />
+    <Compile Include="Tests\*.cs" />
+  </ItemGroup>
+
+</Project>
