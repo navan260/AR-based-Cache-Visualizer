@@ -101,6 +101,7 @@ export const MemoryVisualizer: React.FC<MemoryVisualizerProps> = ({
                     <AddressBreakdown
                         address={lastResult.addressComponents.address}
                         decoder={decoder}
+                        blockSizeBytes={config.blockSizeBytes}
                     />
                 </div>
             )}

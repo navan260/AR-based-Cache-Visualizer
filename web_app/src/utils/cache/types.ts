@@ -1,15 +1,19 @@
 
-export enum MappingType {
-    DirectMapped = "DirectMapped",
-    SetAssociative = "SetAssociative",
-    FullyAssociative = "FullyAssociative"
-}
+export const MappingType = {
+    DirectMapped: "DirectMapped",
+    SetAssociative: "SetAssociative",
+    FullyAssociative: "FullyAssociative"
+} as const;
 
-export enum ReplacementPolicy {
-    FIFO = "FIFO",
-    LRU = "LRU",
-    Random = "Random"
-}
+export type MappingType = typeof MappingType[keyof typeof MappingType];
+
+export const ReplacementPolicy = {
+    FIFO: "FIFO",
+    LRU: "LRU",
+    Random: "Random"
+} as const;
+
+export type ReplacementPolicy = typeof ReplacementPolicy[keyof typeof ReplacementPolicy];
 
 export interface CacheConfiguration {
     memorySizeKB: number;

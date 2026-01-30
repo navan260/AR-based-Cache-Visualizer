@@ -1,0 +1,12 @@
+src/App.tsx(2,59): error TS6133: 'AddressDecoder' is declared but its value is never read.
+src/App.tsx(375,27): error TS2322: Type '(providedAddress?: number) => void' is not assignable to type 'MouseEventHandler<HTMLButtonElement>'.
+  Types of parameters 'providedAddress' and 'event' are incompatible.
+    Type 'MouseEvent<HTMLButtonElement, MouseEvent>' is not assignable to type 'number'.
+src/components/CacheGrid.tsx(18,5): error TS6133: 'blockSizeBytes' is declared but its value is never read.
+src/components/ImprovedVisualizer.tsx(21,5): error TS6133: 'cacheLines' is declared but its value is never read.
+src/components/MemoryVisualizer.tsx(101,22): error TS2741: Property 'blockSizeBytes' is missing in type '{ address: number; decoder: AddressDecoder; }' but required in type 'AddressBreakdownProps'.
+src/components/ThreeVisualizer.tsx(226,13): error TS2339: Property 'isPresenting' does not exist on type 'Readonly<{ body?: XRBody | undefined; session?: XRSession | undefined; mediaBinding?: XRMediaBinding | undefined; originReferenceSpace?: XRReferenceSpace | undefined; ... 9 more ...; emulator?: XRDevice | undefined; } & WithRecord<...>>'.
+src/components/ThreeVisualizer.tsx(256,18): error TS2741: Property 'store' is missing in type '{ className: string; }' but required in type 'Omit<Omit<{ store: XRStore; mode: XRSessionMode; onError?: ((error: any) => void) | undefined; children?: ReactNode | ((status: "unsupported" | "exited" | "entered") => ReactNode); } & Omit<...> & RefAttributes<...>, "ref">, "mode">'.
+src/components/ThreeVisualizer.tsx(258,22): error TS2741: Property 'store' is missing in type '{ children: Element[]; }' but required in type 'XRProperties'.
+src/utils/cache/types.ts(2,13): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
+src/utils/cache/types.ts(8,13): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.

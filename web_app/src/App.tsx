@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { MappingType, ReplacementPolicy, CacheController, AddressDecoder } from './utils/cache';
+import { MappingType, ReplacementPolicy, CacheController } from './utils/cache';
 import type { CacheConfiguration, CacheStatistics, CacheAccessResult, CacheLineData } from './utils/cache';
 import { ImprovedVisualizer } from './components/ImprovedVisualizer';
 import './styles/visualizer.css';
@@ -372,7 +372,7 @@ function App() {
                     placeholder="0x0000 or 1024"
                     className="flex-1 bg-slate-800 border border-slate-600 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none font-mono"
                   />
-                  <button onClick={handleAccess} disabled={!controller}
+                  <button onClick={() => handleAccess()} disabled={!controller}
                     className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-6 rounded-lg transition-all duration-200">
                     Access
                   </button>

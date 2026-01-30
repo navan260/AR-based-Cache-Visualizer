@@ -15,7 +15,7 @@ export const CacheGrid: React.FC<CacheGridProps> = ({
     cacheLines,
     mappingType,
     associativity,
-    blockSizeBytes,
+
     accessedLineIndex,
     isHit,
     is3D

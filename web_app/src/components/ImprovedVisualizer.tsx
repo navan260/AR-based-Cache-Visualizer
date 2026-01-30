@@ -18,7 +18,7 @@ interface ImprovedVisualizerProps {
 
 export const ImprovedVisualizer: React.FC<ImprovedVisualizerProps> = ({
     config,
-    cacheLines,
+
     lastResult,
     decoder,
     onAccess,
@@ -147,6 +147,7 @@ export const ImprovedVisualizer: React.FC<ImprovedVisualizerProps> = ({
                     accessedBlock={showConnector ? ramBlockNumber : undefined}
                     cacheLineIndex={showConnector && lastResult ? lastResult.cacheLineIndex : undefined}
                     isHit={lastResult?.isHit}
+                    onAccess={onAccess}
                 />
             </div>
 
