@@ -5,6 +5,8 @@ import { WASDControls } from './WASDControls';
 import { Suspense, useMemo, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
+const store = createXRStore();
+
 interface ThreeVisualizerProps {
     memorySizeKB: number;
     cacheSizeKB: number;
@@ -231,7 +233,7 @@ function Scene({
     );
 }
 
-const store = createXRStore();
+
 
 // OrbitControls wrapper that disables itself in AR mode
 function InteractiveControls() {
@@ -270,16 +272,27 @@ function XRDebug() {
             });
     }, []);
 
-    if (status.supported === true) return null; // Hide if supported
+    const enterAR = () => store.enterAR();
 
     return (
-        <div className="absolute top-2 left-2 right-2 bg-red-900/90 border border-red-500 text-white p-3 rounded-lg text-xs font-mono z-50 pointer-events-none">
-            <h3 className="font-bold border-b border-red-500/50 mb-1 pb-1">⚠️ AR Unavailable</h3>
-            <div>🔒 Secure Context (HTTPS): {status.secure ? "✅ Yes" : "❌ No"}</div>
-            <div>📱 WebXR API: {'xr' in navigator ? "✅ Present" : "❌ Missing"}</div>
-            <div>🕶️ AR Support: {status.supported === null ? "Checking..." : (status.supported ? "✅ Yes" : "❌ No")}</div>
-            {status.error && <div className="mt-1 text-red-200">{status.error}</div>}
-            {!status.secure && <div className="mt-1 text-yellow-300">AR requires HTTPS deployment!</div>}
+        <div className="absolute top-2 left-2 right-2 bg-slate-900/90 border border-slate-500 text-white p-3 rounded-lg text-xs font-mono z-50 pointer-events-auto">
+            <h3 className="font-bold border-b border-slate-500/50 mb-1 pb-1">🔧 AR Debug Panel</h3>
+            <div className="grid grid-cols-2 gap-1 mb-2">
+                <div>🔒 HTTPS: {status.secure ? "✅ Yes" : "❌ No"}</div>
+                <div>📱 WebXR API: {'xr' in navigator ? "✅ Yes" : "❌ No"}</div>
+                <div className="col-span-2">🕶️ AR Support: {status.supported === null ? "Checking..." : (status.supported ? "✅ Supported" : "❌ Unsupported")}</div>
+            </div>
+            {status.error && <div className="mb-2 text-red-200 bg-red-900/50 p-1 rounded">{status.error}</div>}
+
+            <button
+                onClick={enterAR}
+                className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded transition-colors"
+            >
+                🚀 Force Enter AR
+            </button>
+            <div className="mt-1 text-[10px] text-slate-400 text-center">
+                If the automatic button is missing, try forcing entry.
+            </div>
         </div>
     );
 }
