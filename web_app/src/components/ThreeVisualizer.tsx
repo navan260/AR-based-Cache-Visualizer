@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
-import { ARButton, XR, useXR, createXRStore } from '@react-three/xr';
+import { XR, useXR, createXRStore } from '@react-three/xr';
 import { WASDControls } from './WASDControls';
 import { Suspense, useMemo, useState, useEffect } from 'react';
 import * as THREE from 'three';
@@ -257,6 +257,8 @@ function XRDebug() {
         secure: window.isSecureContext
     });
 
+    const [isExpanded, setIsExpanded] = useState(false);
+
     useEffect(() => {
         if (!('xr' in navigator)) {
             setStatus(s => ({ ...s, supported: false, error: "WebXR not found (navigator.xr undefined)" }));
@@ -274,13 +276,29 @@ function XRDebug() {
 
     const enterAR = () => store.enterAR();
 
+    if (!isExpanded) {
+        return (
+            <button
+                onClick={() => setIsExpanded(true)}
+                className="fixed top-20 right-4 bg-slate-900/50 hover:bg-slate-900/80 border border-slate-500/50 text-white/70 hover:text-white p-2 rounded-lg text-xs font-mono z-[9999] backdrop-blur-sm transition-all"
+            >
+                🛠️
+            </button>
+        );
+    }
+
     return (
-        <div className="absolute top-2 left-2 right-2 bg-slate-900/90 border border-slate-500 text-white p-3 rounded-lg text-xs font-mono z-50 pointer-events-auto">
-            <h3 className="font-bold border-b border-slate-500/50 mb-1 pb-1">🔧 AR Debug Panel</h3>
-            <div className="grid grid-cols-2 gap-1 mb-2">
-                <div>🔒 HTTPS: {status.secure ? "✅ Yes" : "❌ No"}</div>
-                <div>📱 WebXR API: {'xr' in navigator ? "✅ Yes" : "❌ No"}</div>
-                <div className="col-span-2">🕶️ AR Support: {status.supported === null ? "Checking..." : (status.supported ? "✅ Supported" : "❌ Unsupported")}</div>
+        <div className="fixed top-4 left-4 right-4 bg-slate-900/95 border-2 border-slate-500 text-white p-4 rounded-xl text-sm font-mono z-[9999] shadow-2xl pointer-events-auto">
+            <div className="flex justify-between items-center border-b border-slate-500/50 mb-2 pb-2">
+                <h3 className="font-bold text-lg">🔧 AR Debug Panel</h3>
+                <button onClick={() => setIsExpanded(false)} className="text-slate-400 hover:text-white px-2">✕</button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="bg-slate-800 p-2 rounded">🔒 HTTPS: {status.secure ? "✅" : "❌"}</div>
+                <div className="bg-slate-800 p-2 rounded">📱 API: {'xr' in navigator ? "✅" : "❌"}</div>
+                <div className="col-span-2 bg-slate-800 p-2 rounded text-center">
+                    🕶️ AR: {status.supported === null ? "⏳ Checking..." : (status.supported ? "✅ Supported" : "❌ Unsupported")}
+                </div>
             </div>
             {status.error && <div className="mb-2 text-red-200 bg-red-900/50 p-1 rounded">{status.error}</div>}
 
@@ -294,6 +312,31 @@ function XRDebug() {
                 If the automatic button is missing, try forcing entry.
             </div>
         </div>
+    );
+}
+
+
+
+function FixedARButton() {
+    const [supported, setSupported] = useState<boolean>(false);
+
+    useEffect(() => {
+        if ('xr' in navigator) {
+            (navigator as any).xr.isSessionSupported('immersive-ar')
+                .then((isSupported: boolean) => setSupported(isSupported))
+                .catch(() => setSupported(false));
+        }
+    }, []);
+
+    if (!supported) return null;
+
+    return (
+        <button
+            onClick={() => store.enterAR()}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white font-bold py-3 px-8 rounded-full shadow-lg shadow-purple-500/50 z-[9990] transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 max-w-[90vw] whitespace-nowrap"
+        >
+            <span>👓</span> View in AR
+        </button>
     );
 }
 
@@ -312,16 +355,16 @@ export const ThreeVisualizer: React.FC<ThreeVisualizerProps> = ({
     return (
         <div className="three-visualizer-container relative">
             <XRDebug />
+            <FixedARButton />
             {/* Info Display */}
             <div className="text-xs text-slate-400 mb-2 font-mono bg-slate-900/50 p-2 rounded">
                 📊 RAM: {memorySizeKB * 1024}B ÷ {blockSizeBytes}B = <span className="text-cyan-400 font-bold">{ramBlocks} blocks</span> |
                 Cache: {cacheSizeKB * 1024}B ÷ {blockSizeBytes}B = <span className="text-purple-400 font-bold">{cacheLines} lines</span>
             </div>
-            <div style={{ width: '100%', height: '600px' }}>
-                <ARButton className="ar-button" store={store} />
-                <Canvas>
+            <div className="w-full h-[60vh] min-h-[400px] border border-slate-700 rounded-lg overflow-hidden bg-black/20 backdrop-blur-sm">
+                <Canvas dpr={[1, 2]}>
                     <XR store={store}>
-                        <PerspectiveCamera makeDefault position={[0, 0, 25]} />
+                        <PerspectiveCamera makeDefault position={[0, 0, 35]} fov={75} />
                         <InteractiveControls />
                         <WASDControls />
                         <Suspense fallback={null}>
