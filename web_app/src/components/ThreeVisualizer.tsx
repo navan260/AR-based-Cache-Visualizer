@@ -368,15 +368,17 @@ export const ThreeVisualizer: React.FC<ThreeVisualizerProps> = ({
                         <InteractiveControls />
                         <WASDControls />
                         <Suspense fallback={null}>
-                            <Scene
-                                ramBlocks={ramBlocks}
-                                cacheLines={cacheLines}
-                                accessedBlock={accessedBlock}
-                                cacheLineIndex={cacheLineIndex}
-                                isHit={isHit}
-                                onAccess={onAccess}
-                                blockSizeBytes={blockSizeBytes}
-                            />
+                            <group scale={0.2}>
+                                <Scene
+                                    ramBlocks={ramBlocks}
+                                    cacheLines={cacheLines}
+                                    accessedBlock={accessedBlock}
+                                    cacheLineIndex={cacheLineIndex}
+                                    isHit={isHit}
+                                    onAccess={onAccess}
+                                    blockSizeBytes={blockSizeBytes}
+                                />
+                            </group>
                         </Suspense>
                     </XR>
                 </Canvas>
