@@ -2,7 +2,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
 import { ARButton, XR, useXR, createXRStore } from '@react-three/xr';
 import { WASDControls } from './WASDControls';
-import { Suspense, useMemo } from 'react';
+import { Suspense, useMemo, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
 interface ThreeVisualizerProps {
@@ -247,6 +247,43 @@ function InteractiveControls() {
     ) : null;
 }
 
+// Debug component to check AR support
+function XRDebug() {
+    const [status, setStatus] = useState<{ supported: boolean | null; error: string | null; secure: boolean }>({
+        supported: null,
+        error: null,
+        secure: window.isSecureContext
+    });
+
+    useEffect(() => {
+        if (!('xr' in navigator)) {
+            setStatus(s => ({ ...s, supported: false, error: "WebXR not found (navigator.xr undefined)" }));
+            return;
+        }
+
+        (navigator as any).xr.isSessionSupported('immersive-ar')
+            .then((supported: boolean) => {
+                setStatus(s => ({ ...s, supported, error: supported ? null : "immersive-ar not supported on this device" }));
+            })
+            .catch((e: any) => {
+                setStatus(s => ({ ...s, supported: false, error: e.message || "Error checking support" }));
+            });
+    }, []);
+
+    if (status.supported === true) return null; // Hide if supported
+
+    return (
+        <div className="absolute top-2 left-2 right-2 bg-red-900/90 border border-red-500 text-white p-3 rounded-lg text-xs font-mono z-50 pointer-events-none">
+            <h3 className="font-bold border-b border-red-500/50 mb-1 pb-1">⚠️ AR Unavailable</h3>
+            <div>🔒 Secure Context (HTTPS): {status.secure ? "✅ Yes" : "❌ No"}</div>
+            <div>📱 WebXR API: {'xr' in navigator ? "✅ Present" : "❌ Missing"}</div>
+            <div>🕶️ AR Support: {status.supported === null ? "Checking..." : (status.supported ? "✅ Yes" : "❌ No")}</div>
+            {status.error && <div className="mt-1 text-red-200">{status.error}</div>}
+            {!status.secure && <div className="mt-1 text-yellow-300">AR requires HTTPS deployment!</div>}
+        </div>
+    );
+}
+
 export const ThreeVisualizer: React.FC<ThreeVisualizerProps> = ({
     memorySizeKB,
     cacheSizeKB,
@@ -261,6 +298,7 @@ export const ThreeVisualizer: React.FC<ThreeVisualizerProps> = ({
 
     return (
         <div className="three-visualizer-container relative">
+            <XRDebug />
             {/* Info Display */}
             <div className="text-xs text-slate-400 mb-2 font-mono bg-slate-900/50 p-2 rounded">
                 📊 RAM: {memorySizeKB * 1024}B ÷ {blockSizeBytes}B = <span className="text-cyan-400 font-bold">{ramBlocks} blocks</span> |
