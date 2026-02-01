@@ -148,25 +148,29 @@ function Scene({
     const ramCols = Math.ceil(Math.sqrt(ramBlocks));
     const cacheCols = Math.ceil(Math.sqrt(cacheLines));
 
+    const isPresenting = useXR(state => !!state.session);
+    // Use tighter spacing in AR (4) vs Desktop (10)
+    const xOffset = isPresenting ? 4 : 10;
+
     const ramPositions = useMemo(() => {
         const positions: [number, number, number][] = [];
         for (let i = 0; i < ramBlocks; i++) {
             const row = Math.floor(i / ramCols);
             const col = i % ramCols;
-            positions.push([-10 + col * 1, 5 - row * 1, 0]);
+            positions.push([-xOffset + col * 1, 5 - row * 1, 0]);
         }
         return positions;
-    }, [ramBlocks, ramCols]);
+    }, [ramBlocks, ramCols, xOffset]);
 
     const cachePositions = useMemo(() => {
         const positions: [number, number, number][] = [];
         for (let i = 0; i < cacheLines; i++) {
             const row = Math.floor(i / cacheCols);
             const col = i % cacheCols;
-            positions.push([10 + col * 1, 5 - row * 1, 0]);
+            positions.push([xOffset + col * 1, 5 - row * 1, 0]);
         }
         return positions;
-    }, [cacheLines, cacheCols]);
+    }, [cacheLines, cacheCols, xOffset]);
 
     return (
         <>
@@ -177,7 +181,7 @@ function Scene({
 
             {/* RAM section label */}
             <Text
-                position={[-10, 7, 0]}
+                position={[-xOffset, 7, 0]}
                 fontSize={0.8}
                 color="#06b6d4"
                 anchorX="left"
@@ -200,7 +204,7 @@ function Scene({
 
             {/* Cache section label */}
             <Text
-                position={[10, 7, 0]}
+                position={[xOffset, 7, 0]}
                 fontSize={0.8}
                 color="#8b5cf6"
                 anchorX="left"
