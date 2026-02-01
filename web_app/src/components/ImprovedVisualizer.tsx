@@ -90,7 +90,7 @@ export const ImprovedVisualizer: React.FC<ImprovedVisualizerProps> = ({
                     3D RAM ↔ Cache Mapping Visualization
                 </h2>
                 <p className="text-sm text-slate-400 mt-2">
-                    Use mouse to rotate • Scroll to zoom • Enter address below to see mapping
+                    Left Click: Rotate • Right Click: Pan • Scroll: Zoom • WASD: Fly
                 </p>
             </div>
 

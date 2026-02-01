@@ -5,7 +5,7 @@ import { Vector3 } from 'three';
 export const WASDControls = () => {
     const { camera } = useThree();
     const codes = useRef<Set<string>>(new Set());
-    const speed = 0.5; // Movement speed
+    const speed = 2.5; // Movement speed
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => codes.current.add(e.code);
@@ -40,25 +40,34 @@ export const WASDControls = () => {
         // Calculate right vector
         right.crossVectors(forward, camera.up);
 
+        const moveVector = new Vector3();
+
         if (codes.current.has('KeyW')) {
-            camera.position.addScaledVector(forward, moveSpeed);
+            moveVector.addScaledVector(forward, moveSpeed);
         }
         if (codes.current.has('KeyS')) {
-            camera.position.addScaledVector(forward, -moveSpeed);
+            moveVector.addScaledVector(forward, -moveSpeed);
         }
         if (codes.current.has('KeyA')) {
-            camera.position.addScaledVector(right, -moveSpeed);
+            moveVector.addScaledVector(right, -moveSpeed);
         }
         if (codes.current.has('KeyD')) {
-            camera.position.addScaledVector(right, moveSpeed);
+            moveVector.addScaledVector(right, moveSpeed);
         }
 
         // Up/Down movement (global Y axis)
         if (codes.current.has('Space')) {
-            camera.position.y += moveSpeed;
+            moveVector.y += moveSpeed;
         }
         if (codes.current.has('ShiftLeft') || codes.current.has('ShiftRight')) {
-            camera.position.y -= moveSpeed;
+            moveVector.y -= moveSpeed;
+        }
+
+        camera.position.add(moveVector);
+
+        // Sync controls target if available to keep pivot point relative to camera
+        if (controls && controls.target) {
+            controls.target.add(moveVector);
         }
     });
 
