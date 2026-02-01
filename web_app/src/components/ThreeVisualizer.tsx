@@ -340,6 +340,18 @@ function FixedARButton() {
     );
 }
 
+function ScaledVisualizerGroup({ children }: { children: React.ReactNode }) {
+    const isPresenting = useXR(state => !!state.session);
+    // Desktop: 1.6 (2x Larger), XR: 0.2 (Original/Small)
+    const scale = isPresenting ? 0.2 : 1.6;
+
+    return (
+        <group scale={scale}>
+            {children}
+        </group>
+    );
+}
+
 export const ThreeVisualizer: React.FC<ThreeVisualizerProps> = ({
     memorySizeKB,
     cacheSizeKB,
@@ -368,7 +380,7 @@ export const ThreeVisualizer: React.FC<ThreeVisualizerProps> = ({
                         <InteractiveControls />
                         <WASDControls />
                         <Suspense fallback={null}>
-                            <group scale={0.2}>
+                            <ScaledVisualizerGroup>
                                 <Scene
                                     ramBlocks={ramBlocks}
                                     cacheLines={cacheLines}
@@ -378,7 +390,7 @@ export const ThreeVisualizer: React.FC<ThreeVisualizerProps> = ({
                                     onAccess={onAccess}
                                     blockSizeBytes={blockSizeBytes}
                                 />
-                            </group>
+                            </ScaledVisualizerGroup>
                         </Suspense>
                     </XR>
                 </Canvas>
